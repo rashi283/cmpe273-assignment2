@@ -28,11 +28,12 @@ public class BookRepository implements BookRepositoryInterface {
 	Book book = new Book();
 	book.setIsbn(1);
 	book.setCategory("computer");
-	book.setTitle("Java Concurrency in Practice");
+	book.setTitle("Data Structures and Algorithms");
 	try {
 	    book.setCoverimage(new URL("http://goo.gl/N96GJN"));
 	} catch (MalformedURLException e) {
 	    // eat the exception
+		System.out.println("Exception in bookrepository.java-"+e.getMessage());
 	}
 	bookMap.put(book.getIsbn(), book);
 
@@ -44,6 +45,8 @@ public class BookRepository implements BookRepositoryInterface {
 	    book.setCoverimage(new URL("http://goo.gl/ZGmzoJ"));
 	} catch (MalformedURLException e) {
 	    // eat the exception
+		System.out.println("Exception in bookrepository.java-"+e.getMessage());
+
 	}
 	bookMap.put(book.getIsbn(), book);
 
@@ -78,6 +81,20 @@ public class BookRepository implements BookRepositoryInterface {
 	return newBook;
     }
 
+    @Override
+   	public
+       Book addBook(Book newBook){
+       	bookInMemoryMap.putIfAbsent(newBook.getIsbn(), newBook);
+   		return newBook;
+       }
+       
+       @Override
+      	public
+          void updateBook(Long isbn,Book newBook){
+          	bookInMemoryMap.put(isbn, newBook);
+      		
+          }
+    
     /**
      * @see edu.sjsu.cmpe.library.repository.BookRepositoryInterface#getBookByISBN(java.lang.Long)
      */
@@ -93,14 +110,7 @@ public class BookRepository implements BookRepositoryInterface {
 	return new ArrayList<Book>(bookInMemoryMap.values());
     }
 
-    /*
-     * Delete a book from the map by the isbn. If the given ISBN was invalid, do
-     * nothing.
-     * 
-     * @see
-     * edu.sjsu.cmpe.library.repository.BookRepositoryInterface#delete(java.
-     * lang.Long)
-     */
+   
     @Override
     public void delete(Long isbn) {
 	bookInMemoryMap.remove(isbn);

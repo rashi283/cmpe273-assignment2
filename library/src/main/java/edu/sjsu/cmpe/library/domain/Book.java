@@ -8,37 +8,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class Book {
 
-    public enum Status {
-	available("available"), checkedout("checkedout"), lost("lost");
-
-	private String value;
-
-	Status(String value) {
-	    this.value = value;
-	}
-
-	public String getValue() {
-	    return value;
-	}
-
-	@Override
-	public String toString() {
-	    return this.getValue();
-	}
-
-	public static Status getEnum(String value) {
-	    if (value == null) {
-		throw new IllegalArgumentException();
-	    }
-	    for (Status v : values()) {
-		if (value.equalsIgnoreCase(v.getValue())) {
-		    return v;
-		}
-	    }
-	    throw new IllegalArgumentException();
-	}
-    }
-
     @NotNull
     private long isbn;
 
@@ -51,7 +20,7 @@ public class Book {
     private URL coverimage;
 
     /** Default is 'available' */
-    private Status status = Status.available;
+    private String status = "available";
 
     /**
      * @return the isbn
@@ -113,19 +82,12 @@ public class Book {
 	this.coverimage = coverImage;
     }
 
-    /**
-     * @return the status
-     */
-    public Status getStatus() {
-	return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    /**
-     * @param status
-     *            the status to set
-     */
-    public void setStatus(Status status) {
-	this.status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 }
