@@ -23,10 +23,11 @@ public class RootResource {
 
     @GET
     @Timed(name = "get-root")
-    public Response getRoot() {
-	LinksDto links = new LinksDto();
-	links.addLink(new LinkDto("create-book", "/books", "POST"));
-
-	return Response.ok(links).build();
+    public Response getRoot() 
+    {
+		LinksDto links = new LinksDto();
+		links.addLink(new LinkDto("create-book", "/books", "POST"));
+	
+		return Response.ok(links).build();
     }
 }

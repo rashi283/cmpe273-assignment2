@@ -11,46 +11,53 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import edu.sjsu.cmpe.library.domain.Book;
 
-public class BookRepository implements BookRepositoryInterface {
+public class BookRepository implements BookRepositoryInterface 
+{
     /** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
     private final ConcurrentHashMap<Long, Book> bookInMemoryMap;
 
     /** Never access this key directly; instead use generateISBNKey() */
     private long isbnKey;
 
-    public BookRepository() {
-	bookInMemoryMap = seedData();
-	isbnKey = 0;
+    public BookRepository() 
+    {
+		bookInMemoryMap = seedData();
+		isbnKey = 0;
     }
 
-    private ConcurrentHashMap<Long, Book> seedData(){
-	ConcurrentHashMap<Long, Book> bookMap = new ConcurrentHashMap<Long, Book>();
-	Book book = new Book();
-	book.setIsbn(1);
-	book.setCategory("computer");
-	book.setTitle("Data Structures and Algorithms");
-	try {
-	    book.setCoverimage(new URL("http://goo.gl/N96GJN"));
-	} catch (MalformedURLException e) {
-	    // eat the exception
-		System.out.println("Exception in bookrepository.java-"+e.getMessage());
-	}
-	bookMap.put(book.getIsbn(), book);
-
-	book = new Book();
-	book.setIsbn(2);
-	book.setCategory("computer");
-	book.setTitle("Restful Web Services");
-	try {
-	    book.setCoverimage(new URL("http://goo.gl/ZGmzoJ"));
-	} catch (MalformedURLException e) {
-	    // eat the exception
-		System.out.println("Exception in bookrepository.java-"+e.getMessage());
-
-	}
-	bookMap.put(book.getIsbn(), book);
-
-	return bookMap;
+    private ConcurrentHashMap<Long, Book> seedData()
+    {
+		ConcurrentHashMap<Long, Book> bookMap = new ConcurrentHashMap<Long, Book>();
+		Book book = new Book();
+		book.setIsbn(1);
+		book.setCategory("computer");
+		book.setTitle("Java Concurrency in Practice");
+		try 
+		{
+		    book.setCoverimage(new URL("http://goo.gl/N96GJN"));
+		} 
+		catch (MalformedURLException e) 
+		{
+		    // eat the exception
+			System.out.println("Exception Caught in Setting the Cover Image : " + e.getMessage());
+		}
+		bookMap.put(book.getIsbn(), book);
+	
+		book = new Book();
+		book.setIsbn(2);
+		book.setCategory("computer");
+		book.setTitle("Restful Web Services");
+		try 
+		{
+		    book.setCoverimage(new URL("http://goo.gl/ZGmzoJ"));
+		} catch (MalformedURLException e) 
+		{
+		    // eat the exception
+			System.out.println("Exception Caught in Setting the Cover Image : "+e.getMessage());
+		}
+		bookMap.put(book.getIsbn(), book);
+	
+		return bookMap;
     }
 
     /**
@@ -59,61 +66,68 @@ public class BookRepository implements BookRepositoryInterface {
      * 
      * @return a new incremental ISBN number
      */
-    private final Long generateISBNKey() {
-	// increment existing isbnKey and return the new value
-	return Long.valueOf(++isbnKey);
+    private final Long generateISBNKey() 
+    {
+		// increment existing isbnKey and return the new value
+		return Long.valueOf(++isbnKey);
     }
 
     /**
      * This will auto-generate unique ISBN for new books.
      */
     @Override
-    public Book saveBook(Book newBook) {
-	checkNotNull(newBook, "newBook instance must not be null");
-	// Generate new ISBN
-	Long isbn = generateISBNKey();
-	newBook.setIsbn(isbn);
-	// TODO: create and associate other fields such as author
-
-	// Finally, save the new book into the map
-	bookInMemoryMap.putIfAbsent(isbn, newBook);
-
-	return newBook;
+    public Book saveBook(Book newBook) 
+    {
+		checkNotNull(newBook, "newBook instance must not be null");
+		// Generate new ISBN
+		Long isbn = generateISBNKey();
+		newBook.setIsbn(isbn);
+		// TODO: create and associate other fields such as author
+	
+		// Finally, save the new book into the map
+		bookInMemoryMap.putIfAbsent(isbn, newBook);
+	
+		return newBook;
     }
 
     @Override
-   	public
-       Book addBook(Book newBook){
+   	public Book addBook(Book newBook)
+    {
        	bookInMemoryMap.putIfAbsent(newBook.getIsbn(), newBook);
    		return newBook;
-       }
+    }
        
-       @Override
-      	public
-          void updateBook(Long isbn,Book newBook){
-          	bookInMemoryMap.put(isbn, newBook);
-      		
-          }
+    @Override
+    public void updateBook(Long isbn,Book newBook)
+    {
+          	bookInMemoryMap.put(isbn, newBook);  		
+    }
     
     /**
      * @see edu.sjsu.cmpe.library.repository.BookRepositoryInterface#getBookByISBN(java.lang.Long)
      */
     @Override
-    public Book getBookByISBN(Long isbn) {
-	checkArgument(isbn > 0,
-		"ISBN was %s but expected greater than zero value", isbn);
-	return bookInMemoryMap.get(isbn);
+    public Book getBookByISBN(Long isbn) 
+    {
+		checkArgument(isbn > 0, "ISBN was %s but expected greater than zero value", isbn);
+		return bookInMemoryMap.get(isbn);
     }
 
     @Override
-    public List<Book> getAllBooks() {
-	return new ArrayList<Book>(bookInMemoryMap.values());
+    public List<Book> getAllBooks() 
+    {
+    	return new ArrayList<Book>(bookInMemoryMap.values());
     }
 
-   
+    /**
+     * Delete a book from the map by the isbn. If the given ISBN was invalid, do nothing
+     * @see
+     * edu.sjsu.cmpe.library.repository.BookRepositoryInterface#delete(java.lang.Long)
+     */
     @Override
-    public void delete(Long isbn) {
-	bookInMemoryMap.remove(isbn);
+    public void delete(Long isbn) 
+    {
+    	bookInMemoryMap.remove(isbn);
     }
 
 }

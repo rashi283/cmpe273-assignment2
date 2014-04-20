@@ -9,15 +9,18 @@ import javax.ws.rs.core.Response;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public class RootResource {
+public class RootResource 
+{
 
-    public RootResource() {
-	// do nothing
+    public RootResource() 
+    {
+    	// do nothing
     }
 
     @GET
-    public Response getRoot() {
-	return Response.ok("Ok").build();
+    public Response getRoot() 
+    {
+    	return Response.ok("Ok").build();
     }
 }
 
